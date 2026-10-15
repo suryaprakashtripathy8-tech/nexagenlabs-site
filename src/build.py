@@ -111,7 +111,6 @@ def page(path, title, desc, body, *, schema="", og_type="website", og_image=None
 <button class="menu-btn" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">{icon("menu")}</button>
 <ul class="nav-links" id="nav-links">{nav}</ul>
 <button class="search-btn" data-open-search aria-label="Search the site (Ctrl+K)">{icon("search")}<span>Search</span><kbd>Ctrl K</kbd></button>
-<a class="btn btn-primary btn-sm nav-cta" href="{BM}/" data-ev="open_benchmate" data-label="header">Open BenchMate {icon("arrow")}</a>
 </div></header>
 <main id="main">
 {body}
