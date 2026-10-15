@@ -1,4 +1,4 @@
-/* NexagenLabs — dark lab-instrument design system */
+/* NexagenLabs: dark lab-instrument design system */
 @font-face{font-family:"Inter";src:url(/assets/fonts/inter.woff2) format("woff2");font-weight:100 900;font-display:swap}
 @font-face{font-family:"Space Grotesk";src:url(/assets/fonts/space-grotesk.woff2) format("woff2");font-weight:300 700;font-display:swap}
 @font-face{font-family:"JetBrains Mono";src:url(/assets/fonts/jetbrains-mono.woff2) format("woff2");font-weight:100 800;font-display:swap}
@@ -162,9 +162,15 @@ section{padding:88px 0}
 .book-body h3 a{color:#fff}
 .book-body .sub{color:var(--muted);font-size:.88rem;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .stores{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap}
-.store{flex:1;display:inline-flex;justify-content:center;align-items:center;gap:6px;padding:9px 10px;border-radius:10px;border:1px solid var(--line-2);color:#fff;font-family:var(--f-mono);font-size:.78rem;letter-spacing:.03em;background:rgba(255,255,255,.02);min-width:72px}
-.store:hover{border-color:var(--amber);color:var(--amber);text-decoration:none}
-.store .flag{font-size:.95rem}
+.store{position:relative;flex:1;display:inline-flex;justify-content:center;align-items:center;gap:6px;padding:10px 12px;border-radius:999px;border:1px solid rgba(120,180,255,.28);color:var(--text-2);font-size:.82rem;letter-spacing:.01em;background:rgba(10,18,32,.7);min-width:96px;overflow:hidden;isolation:isolate;transition:color .25s,border-color .25s,box-shadow .25s}
+.store b{color:#fff;font-weight:600}
+.store .sep{opacity:.5}
+.store .glow{position:absolute;inset:-1px;z-index:-1;border-radius:inherit;background:radial-gradient(120px 40px at 50% 120%,rgba(90,169,255,.35),transparent 70%);opacity:.7;transition:opacity .25s}
+.store{box-shadow:0 0 0 0 rgba(90,169,255,0),0 0 18px -6px rgba(90,169,255,.45);animation:breathe 4.5s ease-in-out infinite}
+.store:hover{text-decoration:none;color:#fff;border-color:rgba(140,200,255,.7);box-shadow:0 0 0 1px rgba(140,200,255,.25),0 0 26px -4px rgba(90,169,255,.75)}
+.store:hover .glow{opacity:1}
+@keyframes breathe{50%{box-shadow:0 0 0 0 rgba(90,169,255,0),0 0 24px -4px rgba(90,169,255,.6)}}
+@media (prefers-reduced-motion:reduce){.store{animation:none}}
 
 /* Book detail */
 .book-detail{display:grid;grid-template-columns:360px 1fr;gap:56px;align-items:start}
@@ -284,3 +290,10 @@ section{padding:88px 0}
 .search svg{width:18px;height:18px;flex:none;color:var(--muted)}
 .aside-card a.btn-primary,.aside-card a.btn-primary:hover{color:var(--accent-ink)}
 .card .meta svg,.go svg{width:14px;height:14px;display:inline-block;vertical-align:-2px}
+
+.brand-mark{width:34px;height:34px;border-radius:9px;box-shadow:0 0 0 1px rgba(140,190,255,.25),0 4px 18px -6px rgba(90,169,255,.6);object-fit:cover}
+.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid var(--line-2);background:none}
+.portrait{margin:0 0 26px;width:148px;height:148px;border-radius:50%;padding:4px;background:conic-gradient(from 200deg,var(--accent),#5aa9ff,var(--violet),var(--accent));box-shadow:0 0 40px -10px rgba(90,169,255,.6)}
+.portrait img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid var(--bg)}
+.founder-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.portrait-sm{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid rgba(90,169,255,.45);box-shadow:0 0 24px -8px rgba(90,169,255,.7)}
