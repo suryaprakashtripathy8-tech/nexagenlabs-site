@@ -1,0 +1,11 @@
+# Old Google Sites paths
+/home                 /                                   301
+# GLP-1 book QR codes print nexagenlabs.com/glp1/...
+/glp1                 https://glp1.nexagenlabs.com/        301!
+/glp1/*               https://glp1.nexagenlabs.com/:splat  301!
+# BenchMate deep links typed on the main domain
+/benchmate/*          https://benchmate.nexagenlabs.com/:splat 301!
+# Friendly shortcuts
+/lab                  https://lab.nexagenlabs.com/         302
+/blog                 /guides/                             301
+/blog/*               /guides/:splat                       301
