@@ -39,7 +39,7 @@ PROPERTIES = [
         "book": "the-working-laboratory",
     },
     {
-        "slug": "agentic-lab", "name": "The Agentic Lab — Companion Code", "url": "https://lab.nexagenlabs.com/",
+        "slug": "agentic-lab", "name": "The Agentic Lab: Companion Code", "url": "https://lab.nexagenlabs.com/",
         "kind": "AI agents · code companion", "status": "live", "icon": "agent", "tone": "violet",
         "cats": "ai companion",
         "desc": "Twelve tested builds for AI agents in biotech and pharma R&D: literature triage, data wrangling, plate mapping, docking loops, ELN bridges and run provenance.",
@@ -120,6 +120,6 @@ CREDENTIALS = [
     ("52", "AIR", "DBT-GATB fellowship, all-India rank"),
     ("820", "AIR", "GATE Biotechnology, all-India rank"),
     ("9.0", "CGPA", "M.Sc. Biotechnology, Pondicherry University"),
-    ("14", "papers", "Book chapters and reviews with Elsevier and Springer Nature (6 published, 8 under review)"),
+    ("14", "papers", "Book chapters and review articles with Elsevier and Springer Nature"),
     ("6", "books", "Published on Amazon across biotech, AI and cancer"),
 ]

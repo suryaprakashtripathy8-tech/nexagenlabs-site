@@ -31,7 +31,7 @@ ICONS = {
 def icon(name, cls=""):
     return f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="{cls}">{ICONS[name]}</svg>'
 
-LOGO = '''<svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7ff5e2"/><stop offset="1" stop-color="#19b8a0"/></linearGradient></defs><path d="M16 2.5l11.7 6.75v13.5L16 29.5 4.3 22.75V9.25z" fill="none" stroke="url(#lg)" stroke-width="2"/><path d="M10.5 20.5v-9l11 9v-9" fill="none" stroke="#e7edf5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="2.5" r="1.6" fill="#2de2c4"/><circle cx="27.7" cy="22.75" r="1.6" fill="#2de2c4"/><circle cx="4.3" cy="22.75" r="1.6" fill="#2de2c4"/></svg>'''
+LOGO = '<img class="brand-mark" src="/assets/img/logo-mark-96.webp" alt="" width="34" height="34">'
 
 NAV = [("/tools", "Tools"), ("/benchmate", "BenchMate"), ("/books/", "Books"), ("/guides/", "Guides"), ("/about", "About"), ("/contact", "Contact")]
 
@@ -40,7 +40,7 @@ ORG = {"@type": "Organization", "@id": U + "/#org", "name": "NexagenLabs", "url"
        "logo": U + "/assets/img/logo-512.png", "description": SITE["tagline"],
        "founder": {"@id": U + "/about#person"}, "sameAs": [SITE["author_page"]]}
 PERSON = {"@type": "Person", "@id": U + "/about#person", "name": SITE["founder"], "url": U + "/about",
-          "jobTitle": "Biotechnology researcher and author",
+          "jobTitle": "Biotechnology researcher and author", "image": U + "/assets/img/suryaprakash-tripathy.jpg",
           "alumniOf": {"@type": "CollegeOrUniversity", "name": "Pondicherry University"},
           "knowsAbout": ["Biotechnology", "Cancer biology", "Computational drug discovery", "Molecular docking", "AI for life sciences", "Laboratory techniques"],
           "worksFor": {"@id": U + "/#org"}, "sameAs": [SITE["author_page"]]}
@@ -61,7 +61,7 @@ def page(path, title, desc, body, *, schema="", og_type="website", og_image=None
     canonical = U + path
     if len(desc) > 158:
         desc = desc[:155].rsplit(" ", 1)[0].rstrip(",.;:") + "…"
-    og_image = og_image or U + "/assets/img/og-default.png"
+    og_image = og_image or U + "/assets/img/og-default.jpg"
     nav = "".join(f'<li><a href="{h}"{" aria-current=\"page\"" if active == h else ""}>{n}</a></li>' for h, n in NAV)
     gsc = f'<meta name="google-site-verification" content="{SITE["gsc_verification"]}">' if SITE["gsc_verification"] else ""
     robots = '<meta name="robots" content="noindex,follow">' if noindex else '<meta name="robots" content="index,follow,max-image-preview:large">'
@@ -88,7 +88,7 @@ def page(path, title, desc, body, *, schema="", og_type="website", og_image=None
 <meta name="twitter:description" content="{e(desc)}">
 <meta name="twitter:image" content="{og_image}">
 {gsc}
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
@@ -123,7 +123,7 @@ def page(path, title, desc, body, *, schema="", og_type="website", og_image=None
         PAGES.append((path, priority))
 
 def footer():
-    tools = "".join(f'<li><a href="{p["url"]}">{e(p["name"].split(" — ")[0])}</a></li>' for p in PROPERTIES)
+    tools = "".join(f'<li><a href="{p["url"]}">{e(p["name"].split(": ")[0])}</a></li>' for p in PROPERTIES)
     guides = "".join(f'<li><a href="/guides/{g["slug"]}">{e(g["short"])}</a></li>' for g in GUIDES[:5])
     return f'''<footer class="site-footer"><div class="wrap">
 <div class="foot-grid">
@@ -170,11 +170,13 @@ def prop_card(p, cls=""):
 
 def store_buttons(b, where):
     s = b["stores"]
-    return f'''<div class="stores">
-<a class="store" href="{s["us"]}" target="_blank" rel="noopener" data-ev="amazon_click" data-label="{b["slug"]}|us|{where}" aria-label="Buy {e(b["title"])} on Amazon.com"><span class="flag">🇺🇸</span>.com</a>
-<a class="store" href="{s["uk"]}" target="_blank" rel="noopener" data-ev="amazon_click" data-label="{b["slug"]}|uk|{where}" aria-label="Buy {e(b["title"])} on Amazon.co.uk"><span class="flag">🇬🇧</span>.co.uk</a>
-<a class="store" href="{s["de"]}" target="_blank" rel="noopener" data-ev="amazon_click" data-label="{b["slug"]}|de|{where}" aria-label="Buy {e(b["title"])} on Amazon.de"><span class="flag">🇩🇪</span>.de</a>
-</div>'''
+    t = e(b["title"])
+    def btn(key, label, store):
+        return (f'<a class="store" href="{s[key]}" target="_blank" rel="noopener" data-ev="amazon_click" '
+                f'data-label="{b["slug"]}|{key}|{where}" aria-label="Explore {t} on {store}">'
+                f'<span class="glow" aria-hidden="true"></span>Explore<span class="sep">·</span><b>{label}</b></a>')
+    return ('<div class="stores">' + btn("us", "USA", "Amazon.com") + btn("uk", "UK", "Amazon.co.uk")
+            + btn("de", "Germany", "Amazon.de") + '</div>')
 
 def book_card(b, where="grid"):
     return f'''<article class="book reveal">
@@ -251,7 +253,7 @@ def home():
 <div class="field"><label for="c2">Final (C₂)</label><div class="ctl"><input id="c2" inputmode="decimal" value="50"><select id="c2u" aria-label="C2 unit"><option>M</option><option>mM</option><option selected>µM</option><option>nM</option></select></div></div>
 </div>
 <div class="field"><label for="v2">Final volume (V₂)</label><div class="ctl"><input id="v2" inputmode="decimal" value="10"><select id="v2u" aria-label="V2 unit"><option>L</option><option selected>mL</option><option>µL</option></select></div></div>
-<div class="readout" aria-live="polite"><div class="k">Volume of stock to add</div><div class="v" id="out">—</div><div class="s" id="sub"></div></div>
+<div class="readout" aria-live="polite"><div class="k">Volume of stock to add</div><div class="v" id="out">…</div><div class="s" id="sub"></div></div>
 </div>
 <div class="panel-foot"><span class="mono">C₁V₁ = C₂V₂ · runs in your browser</span><a href="{BM}/molarity" data-ev="open_benchmate" data-label="hero-panel">Full calculator →</a></div>
 </div>
@@ -287,7 +289,7 @@ def home():
 </div></section>
 
 <section><div class="wrap"><div class="feature reveal">
-<div><span class="eyebrow">The founder</span><h2>Built by a researcher, not a marketing team.</h2>
+<div><div class="founder-row"><img class="portrait-sm" src="/assets/img/suryaprakash-tripathy.webp" alt="Suryaprakash Tripathy" width="88" height="88" loading="lazy"><span class="eyebrow mb-0">The founder</span></div><h2>Built by a researcher, not a marketing team.</h2>
 <p class="lead">Suryaprakash Tripathy is a biotechnology researcher working across cancer biology, computational drug discovery and filariasis, with research stints at IISER Bhopal, IIT Guwahati and ICMR institutes.</p>
 <a class="btn btn-ghost" href="/about">Read the full profile {icon("arrow")}</a></div>
 <div class="cred-grid one">{creds}</div>
@@ -298,7 +300,7 @@ def home():
 <section><div class="wrap" style="max-width:860px"><div class="section-head"><span class="eyebrow">FAQ</span><h2>Quick answers</h2></div>{faq_html(faq)}</div></section>
 '''
     website = {"@type": "WebSite", "@id": U + "/#website", "url": U + "/", "name": "NexagenLabs", "publisher": {"@id": U + "/#org"}}
-    page("/", "NexagenLabs — Free Lab Calculators, Research Tools & Guides for Scientists",
+    page("/", "NexagenLabs: Free Lab Calculators, Research Tools & Guides for Scientists",
          "Free research tools for scientists: BenchMate lab calculators (molarity, dilution, buffers), AI-agent and docking companion code, evidence registers, guides and books by Suryaprakash Tripathy.",
          body, schema=ld(ORG, PERSON, website, faq_ld(faq)), priority="1.0")
 
@@ -331,7 +333,7 @@ def tools():
 <p class="empty" id="dir-empty">No matches. Try a broader word, or <a href="/contact">suggest a tool</a>.</p>
 </div></section>
 {newsletter("bench-notes-tools")}'''
-    page("/tools", "Free Research Tools for Scientists — Lab Calculators & Companion Code | NexagenLabs",
+    page("/tools", "Free Research Tools for Scientists: Lab Calculators & Companion Code | NexagenLabs",
          "Directory of free NexagenLabs research tools: BenchMate molarity, dilution and buffer calculators, AI-agent and molecular docking companion code, and a cancer evidence register.",
          body, schema=ld(ORG, crumbs_ld([("Home","/"),("Tools","/tools")]), {"@type": "ItemList", "itemListElement": items}), active="/tools", priority="0.9")
 
@@ -370,7 +372,7 @@ def benchmate():
 <div class="field"><label for="c2">Final (C₂)</label><div class="ctl"><input id="c2" inputmode="decimal" value="100"><select id="c2u" aria-label="C2 unit"><option>M</option><option>mM</option><option selected>µM</option><option>nM</option></select></div></div>
 </div>
 <div class="field"><label for="v2">Final volume (V₂)</label><div class="ctl"><input id="v2" inputmode="decimal" value="1"><select id="v2u" aria-label="V2 unit"><option>L</option><option selected>mL</option><option>µL</option></select></div></div>
-<div class="readout" aria-live="polite"><div class="k">Volume of stock to add</div><div class="v" id="out">—</div><div class="s" id="sub"></div></div>
+<div class="readout" aria-live="polite"><div class="k">Volume of stock to add</div><div class="v" id="out">…</div><div class="s" id="sub"></div></div>
 </div>
 <div class="panel-foot"><span class="mono">Full version: units, warnings, serial tables</span><a href="{BM}/molarity" data-ev="open_benchmate" data-label="bm-panel">Open →</a></div>
 </div></div></section>
@@ -386,7 +388,7 @@ def benchmate():
 <section><div class="wrap"><div class="section-head"><span class="eyebrow">Guides</span><h2>Worked examples for every tool</h2></div><div class="grid g-3">{"".join(guide_card(g) for g in GUIDES)}</div></div></section>
 <section><div class="wrap" style="max-width:860px"><div class="section-head"><span class="eyebrow">FAQ</span><h2>BenchMate questions</h2></div>{faq_html(faq)}</div></section>
 {newsletter("bench-notes-benchmate")}'''
-    page("/benchmate", "BenchMate — Free Lab Calculator for Molarity, Dilutions & Buffers | NexagenLabs",
+    page("/benchmate", "BenchMate: Free Lab Calculator for Molarity, Dilutions & Buffers | NexagenLabs",
          "BenchMate is a free, offline, no-login lab calculator: molarity, C1V1 and serial dilutions, 40 buffer recipes, percent solutions, MW lookup for 370 compounds, and a technique quiz with certificate.",
          body, schema=ld(ORG, app, crumbs_ld([("Home","/"),("BenchMate","/benchmate")]), faq_ld(faq)), active="/benchmate", priority="0.95")
 
@@ -400,7 +402,7 @@ def books_index():
 </div></section>
 <section style="padding-top:10px"><div class="wrap"><div class="books">{cards}</div></div></section>
 {newsletter("bench-notes-books")}'''
-    page("/books/", "Books by Suryaprakash Tripathy — Biotech, AI & Cancer Science | NexagenLabs",
+    page("/books/", "Books by Suryaprakash Tripathy: Biotech, AI & Cancer Science | NexagenLabs",
          "All books by Suryaprakash Tripathy: The Agentic Lab, AI for Biotech, The Working Laboratory, Demystifying Biotechnology, The Cancer Decade and The Machines That Read Us. Buy on Amazon US, UK and DE.",
          body, schema=ld(ORG, PERSON, crumbs_ld([("Home","/"),("Books","/books/")]), {"@type": "ItemList", "itemListElement": items}), active="/books/", priority="0.9")
 
@@ -421,15 +423,15 @@ def book_page(b):
 <div><span class="eyebrow">{e(b["topic"])} · {b["year"]}</span>
 <h1 style="font-size:clamp(2rem,4.4vw,3.3rem)">{e(b["title"])}</h1>
 <p class="lead">{e(b["subtitle"])}</p>
-<p class="byline"><span class="avatar">ST</span><span>by <a href="/about">Suryaprakash Tripathy</a> · {e(b["formats"])}</span></p>
+<p class="byline"><img class="avatar" src="/assets/img/suryaprakash-tripathy-96.webp" alt="Suryaprakash Tripathy" width="40" height="40"><span>by <a href="/about">Suryaprakash Tripathy</a> · {e(b["formats"])}</span></p>
 <div style="max-width:520px;margin-bottom:26px">{store_buttons(b, "book-page")}</div>
-<div class="hero-actions">{comp}<a class="btn btn-ghost" href="{SITE["author_page"]}" target="_blank" rel="noopener">All books on Amazon {icon("ext")}</a></div>
+<div class="hero-actions">{comp}<a class="btn btn-ghost" href="{SITE["author_page"]}" target="_blank" rel="noopener">More from the author {icon("ext")}</a></div>
 <div class="prose"><h2 style="margin-top:.6em">About this book</h2><p>{e(b["summary"])}</p>
 <h3>Who it's for</h3><ul class="checklist">{for_list}</ul></div>
 </div></div></div></section>
 <section><div class="wrap"><div class="section-head"><span class="eyebrow">More books</span><h2>You may also like</h2></div><div class="books">{others}</div></div></section>
 {newsletter("bench-notes-book")}'''
-    page(path, f'{b["title"]} — Book by Suryaprakash Tripathy',
+    page(path, f'{b["title"]}: Book by Suryaprakash Tripathy',
          f'{b["title"]} by Suryaprakash Tripathy. {b["summary"].split(". ")[0]}. Buy on Amazon US, UK and DE.',
          body, schema=ld(ORG, PERSON, schema, crumbs_ld([("Home","/"),("Books","/books/"),(b["title"], path)])), og_type="book", og_image=b["cover"], active="/books/", priority="0.8")
 
@@ -440,7 +442,7 @@ def guides_index():
 <p class="lead">Worked examples for the calculations every lab runs. Each guide links to a free BenchMate calculator so you can check your numbers.</p></div></section>
 <section style="padding-top:10px"><div class="wrap"><div class="grid g-3">{cards}</div></div></section>
 {newsletter("bench-notes-guides")}'''
-    page("/guides/", "Lab Calculation Guides — Molarity, Dilutions, Buffers & DNA Concentration | NexagenLabs",
+    page("/guides/", "Lab Calculation Guides: Molarity, Dilutions, Buffers & DNA Concentration | NexagenLabs",
          "Free lab calculation guides with worked examples: molarity, C1V1 dilutions, serial dilutions, buffer preparation, percent solutions and DNA ng/µL to nM conversion.",
          body, schema=ld(ORG, crumbs_ld([("Home","/"),("Guides","/guides/")])), active="/guides/", priority="0.85")
 
@@ -452,7 +454,7 @@ def guide_page(g):
     related = "".join(guide_card(x) for x in [x for x in GUIDES if x["slug"] != g["slug"]][:3])
     article = {"@type": "TechArticle", "@id": U + path + "#article", "headline": g["title"], "description": g["description"],
                "author": {"@id": U + "/about#person"}, "publisher": {"@id": U + "/#org"}, "datePublished": g["date"], "dateModified": g["date"],
-               "mainEntityOfPage": U + path, "keywords": g["keywords"], "image": U + "/assets/img/og-default.png", "proficiencyLevel": "Beginner"}
+               "mainEntityOfPage": U + path, "keywords": g["keywords"], "image": U + "/assets/img/og-default.jpg", "proficiencyLevel": "Beginner"}
     cta = f'''<div class="cta-box"><div><strong>Check your numbers with {e(tool_name)}</strong><p>Free, no login, runs in your browser.</p></div>
 <a class="btn btn-primary" href="{tool_url}" data-ev="open_benchmate" data-label="guide-{g["slug"]}">Open calculator {icon("arrow")}</a></div>'''
     # inject CTA after the 2nd h2
@@ -461,7 +463,7 @@ def guide_page(g):
     body = f'''<section class="page-hero" style="padding-bottom:10px"><div class="wrap">{crumbs_html([("Home","/"),("Guides","/guides/"),(g["short"], path)])}
 <span class="eyebrow">Guide · {g["minutes"]} min read</span>
 <h1 style="font-size:clamp(2rem,4.4vw,3.2rem);max-width:900px">{e(g["title"])}</h1>
-<p class="byline"><span class="avatar">ST</span><span>By <a href="/about">Suryaprakash Tripathy</a>, M.Sc. Biotechnology · Updated <time datetime="{g["date"]}">{date.fromisoformat(g["date"]).strftime("%d %b %Y")}</time></span></p>
+<p class="byline"><img class="avatar" src="/assets/img/suryaprakash-tripathy-96.webp" alt="Suryaprakash Tripathy" width="40" height="40"><span>By <a href="/about">Suryaprakash Tripathy</a>, M.Sc. Biotechnology · Updated <time datetime="{g["date"]}">{date.fromisoformat(g["date"]).strftime("%d %b %Y")}</time></span></p>
 </div></section>
 <section style="padding-top:10px"><div class="wrap article-layout">
 <article class="prose">{body_html}
@@ -482,7 +484,8 @@ def about():
     creds = "".join(f'<div class="cred reveal"><div class="n">{n}<small>{u}</small></div><div class="l">{e(l)}</div></div>' for n, u, l in CREDENTIALS)
     body = f'''<section class="page-hero"><div class="wrap">{crumbs_html([("Home","/"),("About","/about")])}
 <div class="hero-grid" style="align-items:start">
-<div><span class="eyebrow">About the founder</span><h1>Suryaprakash Tripathy</h1>
+<div><figure class="portrait"><img src="/assets/img/suryaprakash-tripathy.webp" alt="Portrait of Suryaprakash Tripathy" width="320" height="320" fetchpriority="high"></figure>
+<span class="eyebrow">About the founder</span><h1>Suryaprakash Tripathy</h1>
 <p class="lead">Biotechnology researcher, author and builder of NexagenLabs. My work sits where wet-lab biology meets computation: cancer biology, computational drug discovery and filariasis, and now AI tools that scientists can actually check.</p>
 <p class="muted">I build these tools because I needed them myself. Most bench errors I have seen were not hard science. They were a wrong molecular weight, a skipped unit conversion, or a buffer set at the wrong temperature. NexagenLabs exists to catch those before they cost someone a week.</p>
 <div class="hero-actions"><a class="btn btn-primary" href="/contact">Get in touch {icon("arrow")}</a><a class="btn btn-ghost" href="{SITE["author_page"]}" target="_blank" rel="noopener">Amazon author page {icon("ext")}</a></div></div>
@@ -495,13 +498,13 @@ def about():
 <div class="t"><b>National fellowships</b><span>ICMR-JRF (AIR 115), DBT-GATB (AIR 52) and GATE Biotechnology (AIR 820).</span></div>
 <div class="t"><b>IAS-INSA-NASI Summer Research Fellow</b><span>Indian science academies' joint summer research fellowship.</span></div>
 <div class="t"><b>Research at IISER Bhopal, IIT Guwahati and ICMR institutes</b><span>Cancer biology, glioblastoma and hypoxia, prime editing, computational drug discovery and filariasis.</span></div>
-<div class="t"><b>Publications</b><span>14 peer-reviewed book chapters and review articles with Elsevier and Springer Nature: 6 published, 8 under review.</span></div>
+<div class="t"><b>Publications</b><span>14 book chapters and review articles with Elsevier and Springer Nature.</span></div>
 <div class="t"><b>AI evaluation</b><span>Subject-matter expert for evaluating and training frontier AI models on biology and life-science reasoning.</span></div>
 <div class="t"><b>Author</b><span>Six books on Amazon across bench techniques, AI for biotech, AI agents and cancer science. <a href="/books/">See the books</a>.</span></div>
 </div></div></section>
 {newsletter("bench-notes-about")}'''
     profile = {"@type": "ProfilePage", "mainEntity": {"@id": U + "/about#person"}, "url": U + "/about"}
-    page("/about", "Suryaprakash Tripathy — Biotechnology Researcher & Author | NexagenLabs",
+    page("/about", "Suryaprakash Tripathy: Biotechnology Researcher & Author | NexagenLabs",
          "Suryaprakash Tripathy: M.Sc. Biotechnology (Pondicherry University), ICMR-JRF, DBT-GATB and GATE BT ranks, research at IISER Bhopal, IIT Guwahati and ICMR, author of six books and founder of NexagenLabs.",
          body, schema=ld(ORG, PERSON, profile, crumbs_ld([("Home","/"),("About","/about")])), og_type="profile", active="/about", priority="0.7")
 
@@ -563,7 +566,7 @@ def seo_files():
     write("/site.webmanifest", json.dumps({"name": "NexagenLabs", "short_name": "NexagenLabs", "start_url": "/", "display": "standalone",
         "background_color": "#060a11", "theme_color": "#060a11",
         "icons": [{"src": "/assets/img/logo-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "/assets/img/logo-512.png", "sizes": "512x512", "type": "image/png"}]}))
-    # llms.txt — helps AI assistants describe the site accurately
+    # llms.txt: helps AI assistants describe the site accurately
     lines = ["# NexagenLabs", "", f"> {SITE['tagline']}", "", "## Tools"] + [f"- [{p['name']}]({p['url']}): {p['desc']}" for p in PROPERTIES] + \
         ["", "## Guides"] + [f"- [{g['title']}]({U}/guides/{g['slug']}): {g['description']}" for g in GUIDES] + \
         ["", "## Books"] + [f"- [{b['title']}: {b['subtitle']}]({U}/books/{b['slug']})" for b in BOOKS] + \
@@ -575,7 +578,7 @@ def static():
         src = os.path.join(ROOT, d)
         dst = os.path.join(OUT, d)
         shutil.copytree(src, dst, dirs_exist_ok=True)
-    for f in ["favicon.svg", "favicon-32.png", "apple-touch-icon.png", "_redirects", "_headers"]:
+    for f in ["favicon.ico", "favicon-32.png", "favicon-48.png", "apple-touch-icon.png", "_redirects", "_headers"]:
         sp = os.path.join(ROOT, "static", f)
         if os.path.exists(sp):
             shutil.copy(sp, os.path.join(OUT, f))

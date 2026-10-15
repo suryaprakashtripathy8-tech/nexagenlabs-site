@@ -140,12 +140,12 @@ GUIDES = [
 <p>Put 100 µL diluent in each well, add 100 µL of the top concentration to well 1, mix, and carry 100 µL across. Discard 100 µL from the last well so every well ends at the same volume. Eight wells span a 128-fold range. Twelve wells span 2048-fold.</p>
 <h2 id="cfu">Back-calculating CFU/mL</h2>
 <div class="formula">CFU/mL = colonies ÷ (volume plated in mL × dilution)</div>
-<p>Say 10⁻⁶ gives 54 colonies from 100 µL plated. CFU/mL = 54 / (0.1 × 10⁻⁶) = <strong>5.4 × 10⁸ CFU/mL</strong>. Count plates in the 30–300 colony range. Below that the count is noisy. Above it colonies merge.</p>
+<p>Say 10⁻⁶ gives 54 colonies from 100 µL plated. CFU/mL = 54 / (0.1 × 10⁻⁶) = <strong>5.4 × 10⁸ CFU/mL</strong>. Count plates in the 30-300 colony range. Below that the count is noisy. Above it colonies merge.</p>
 <h2 id="errors">How errors compound</h2>
 <p>Each step carries its own pipetting error, and the errors multiply down the chain. A 2% error per step becomes about 13% after six steps (1.02⁶ ≈ 1.13). Three habits keep it down:</p>
 <ul>
 <li><strong>Change tips every step.</strong> Carry-over from a dense tube inflates every tube after it.</li>
-<li><strong>Mix properly.</strong> Pipette up and down 5–8 times or vortex briefly. Unmixed tubes are the biggest source of bad series.</li>
+<li><strong>Mix properly.</strong> Pipette up and down 5-8 times or vortex briefly. Unmixed tubes are the biggest source of bad series.</li>
 <li><strong>Pre-wet the tip</strong> for viscous or protein-rich samples.</li>
 </ul>
 <p>BenchMate builds a serial dilution table for any start concentration, step factor and number of tubes, and prints it as a bench sheet.</p>
@@ -172,12 +172,12 @@ GUIDES = [
 <h2 id="choose">Choose by pKa</h2>
 <p>A buffer resists pH change best within about one unit of its pKa. Outside that range it is just salt water with a pH number on the label.</p>
 <table><thead><tr><th>Buffer</th><th>pKa (25 °C)</th><th>Useful range</th></tr></thead><tbody>
-<tr><td>Acetate</td><td>4.76</td><td>3.8–5.8</td></tr>
-<tr><td>MES</td><td>6.1</td><td>5.5–6.7</td></tr>
-<tr><td>Phosphate (H₂PO₄⁻)</td><td>7.2</td><td>6.2–8.2</td></tr>
-<tr><td>HEPES</td><td>7.5</td><td>6.8–8.2</td></tr>
-<tr><td>Tris</td><td>8.1</td><td>7.0–9.0</td></tr>
-<tr><td>Glycine (amine)</td><td>9.6</td><td>8.8–10.6</td></tr>
+<tr><td>Acetate</td><td>4.76</td><td>3.8-5.8</td></tr>
+<tr><td>MES</td><td>6.1</td><td>5.5-6.7</td></tr>
+<tr><td>Phosphate (H₂PO₄⁻)</td><td>7.2</td><td>6.2-8.2</td></tr>
+<tr><td>HEPES</td><td>7.5</td><td>6.8-8.2</td></tr>
+<tr><td>Tris</td><td>8.1</td><td>7.0-9.0</td></tr>
+<tr><td>Glycine (amine)</td><td>9.6</td><td>8.8-10.6</td></tr>
 </tbody></table>
 <p>Then check compatibility. Phosphate precipitates with calcium and inhibits some kinases. Tris has a primary amine, so it reacts with NHS esters and aldehydes. HEPES can make peroxide under light in some media. The right buffer is the one your downstream step tolerates.</p>
 <h2 id="pbs">1X PBS, pH 7.4 (1 L)</h2>
@@ -256,7 +256,7 @@ GUIDES = [
 <ul>
 <li>0.9% NaCl: (0.9 × 10) / 58.44 = 0.154 M.</li>
 <li>37% HCl (density 1.19): (37 × 1.19 × 10) / 36.46 ≈ 12.1 M.</li>
-<li>28–30% ammonia (density about 0.90): roughly 14.8 M at 28%. Check your bottle's assay.</li>
+<li>28-30% ammonia (density about 0.90): roughly 14.8 M at 28%. Check your bottle's assay.</li>
 </ul>
 <p>Always add concentrated acid to water, slowly, in a fume hood. Never water to acid.</p>
 <p>BenchMate's percent tool gives the mass or volume for any %, converts to molarity, and warns about viscous and hazardous reagents.</p>
@@ -291,7 +291,7 @@ GUIDES = [
 <h2 id="purity">Purity ratios</h2>
 <ul>
 <li><strong>A260/A280:</strong> about 1.8 for clean DNA, about 2.0 for clean RNA. Low values suggest protein or phenol.</li>
-<li><strong>A260/A230:</strong> usually 2.0–2.2. Low values point to guanidine salts, EDTA or carbohydrate carry-over.</li>
+<li><strong>A260/A230:</strong> usually 2.0-2.2. Low values point to guanidine salts, EDTA or carbohydrate carry-over.</li>
 </ul>
 <p>A good concentration with a bad A260/A230 can still fail a ligation. Fluorometric assays (dye-based) are more accurate for low concentrations and for libraries.</p>
 <h2 id="nm">ng/µL to nM</h2>
