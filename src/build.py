@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Static site generator for nexagenlabs.com. Output: ../public"""
-import json, os, re, shutil, html
+import json, os, re, shutil, html, hashlib
 from datetime import date
 from data import SITE, BM, BENCHMATE_TOOLS, PROPERTIES, BOOKS, CREDENTIALS
 from guides import GUIDES
@@ -9,6 +9,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "public")
 U = SITE["url"]
 TODAY = date.today().isoformat()
+def _h(rel):
+    return hashlib.md5(open(os.path.join(ROOT, rel), "rb").read()).hexdigest()[:10]
+CSS_V = _h("assets/css/site.css")
+JS_V = _h("assets/js/site.js")
 PAGES = []  # (path, priority) for sitemap
 e = html.escape
 
@@ -95,7 +99,7 @@ def page(path, title, desc, body, *, schema="", og_type="website", og_image=None
 <link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preconnect" href="https://m.media-amazon.com">
-<link rel="stylesheet" href="/assets/css/site.css?v={TODAY}">
+<link rel="stylesheet" href="/assets/css/site.css?v={CSS_V}">
 <link rel="alternate" type="application/rss+xml" title="NexagenLabs Guides" href="/guides/feed.xml">
 {schema}
 </head>
@@ -115,7 +119,7 @@ def page(path, title, desc, body, *, schema="", og_type="website", og_image=None
 <p>We use Google Analytics cookies, only if you agree, to see which tools and guides help people most. No ads, no selling data. <a href="/privacy">Privacy</a></p>
 <div class="row"><button class="btn btn-primary btn-sm" data-consent="yes">Accept analytics</button><button class="btn btn-ghost btn-sm" data-consent="no">Decline</button></div>
 </div>
-<script src="/assets/js/site.js?v={TODAY}" defer></script>
+<script src="/assets/js/site.js?v={JS_V}" defer></script>
 </body>
 </html>'''
     write(path, doc)
@@ -169,14 +173,9 @@ def prop_card(p, cls=""):
 </article>'''
 
 def store_buttons(b, where):
-    s = b["stores"]
-    t = e(b["title"])
-    def btn(key, label, store):
-        return (f'<a class="store" href="{s[key]}" target="_blank" rel="noopener" data-ev="amazon_click" '
-                f'data-label="{b["slug"]}|{key}|{where}" aria-label="Explore {t} on {store}">'
-                f'<span class="glow" aria-hidden="true"></span>Explore<span class="sep">·</span><b>{label}</b></a>')
-    return ('<div class="stores">' + btn("us", "USA", "Amazon.com") + btn("uk", "UK", "Amazon.co.uk")
-            + btn("de", "Germany", "Amazon.de") + '</div>')
+    return (f'<div class="stores"><a class="explore" href="{b["stores"]["us"]}" target="_blank" rel="noopener" '
+            f'data-ev="amazon_click" data-label="{b["slug"]}|us|{where}" aria-label="Explore {e(b["title"])} on Amazon">'
+            f'<span>Explore</span>{icon("arrow")}</a></div>')
 
 def book_card(b, where="grid"):
     return f'''<article class="book reveal">
