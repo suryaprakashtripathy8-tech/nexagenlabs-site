@@ -6,7 +6,7 @@ SITE = {
     "tagline": "Free research tools, companion code and field-tested guides for working scientists.",
     "founder": "Suryaprakash Tripathy",
     "author_page": "https://www.amazon.com/stores/Suryaprakash-Tripathy/author/B0CJ6VXV76",
-    "ga_id": "",  # set to G-XXXXXXX once GA4 property exists
+    "ga_id": "G-LBG6BT3K02",  # set to G-XXXXXXX once GA4 property exists
     "gsc_verification": "",  # Google Search Console HTML-tag token (optional if verified by DNS)
     "location": "Nabarangpur, Odisha, India",
 }
