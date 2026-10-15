@@ -2,7 +2,7 @@
 
 SITE = {
     "name": "NexagenLabs",
-    "url": "https://www.nexagenlabs.com",
+    "url": "https://nexagenlabs.com",
     "tagline": "Free research tools, companion code and field-tested guides for working scientists.",
     "founder": "Suryaprakash Tripathy",
     "author_page": "https://www.amazon.com/stores/Suryaprakash-Tripathy/author/B0CJ6VXV76",
