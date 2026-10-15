@@ -1,4 +1,4 @@
-/* NexagenLabs site script — no dependencies */
+/* NexagenLabs site script: no dependencies */
 (function () {
   "use strict";
   var GA_ID = document.documentElement.getAttribute("data-ga") || "";
@@ -25,7 +25,7 @@
     var f = { 2: { M: 1, mM: 1e-3, "µM": 1e-6, nM: 1e-9 }, v: { L: 1, mL: 1e-3, "µL": 1e-6 } };
     var q = function (id) { return calc.querySelector("#" + id); };
     var fmt = function (x) {
-      if (!isFinite(x) || x <= 0) return "—";
+      if (!isFinite(x) || x <= 0) return "…";
       if (x >= 1) return x.toFixed(3).replace(/\.?0+$/, "") + " L";
       if (x >= 1e-3) return (x * 1e3).toFixed(3).replace(/\.?0+$/, "") + " mL";
       return (x * 1e6).toFixed(2).replace(/\.?0+$/, "") + " µL";
@@ -35,7 +35,7 @@
       var c2 = parseFloat(q("c2").value) * f[2][q("c2u").value];
       var v2 = parseFloat(q("v2").value) * f.v[q("v2u").value];
       var out = q("out"), sub = q("sub");
-      if (!(c1 > 0 && c2 > 0 && v2 > 0)) { out.textContent = "—"; sub.textContent = "Enter positive values."; return; }
+      if (!(c1 > 0 && c2 > 0 && v2 > 0)) { out.textContent = "…"; sub.textContent = "Enter positive values."; return; }
       if (c2 > c1) { out.textContent = "Check C₂"; sub.textContent = "Final concentration can't exceed the stock."; return; }
       var v1 = (c2 * v2) / c1;
       out.textContent = "V₁ = " + fmt(v1);
@@ -75,7 +75,7 @@
         .then(function (r) {
           if (!r.ok) throw new Error(r.status);
           form.reset();
-          if (status) status.textContent = form.getAttribute("data-ok") || "Thanks — received.";
+          if (status) status.textContent = form.getAttribute("data-ok") || "Thanks: received.";
           track("generate_lead", { form: form.getAttribute("name") });
         })
         .catch(function () { if (status) status.textContent = "Something went wrong. Please try again."; })
