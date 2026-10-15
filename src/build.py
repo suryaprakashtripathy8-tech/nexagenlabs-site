@@ -37,10 +37,11 @@ def icon(name, cls=""):
 
 LOGO = '<img class="brand-mark" src="/assets/img/logo-mark-96.webp" alt="" width="34" height="34">'
 
+KIT = "/assets/kit/nexagenlabs-bench-starter-kit.pdf"
 NAV = [("/tools", "Tools"), ("/benchmate", "BenchMate"), ("/books/", "Books"), ("/guides/", "Guides"), ("/about", "About"), ("/contact", "Contact")]
 
 # ------------------------------------------------------------------ JSON-LD helpers
-ORG = {"@type": "Organization", "@id": U + "/#org", "name": "NexagenLabs", "url": U + "/",
+ORG = {"@type": "Organization", "@id": U + "/#org", "name": "NexagenLabs", "alternateName": ["Nexagen Labs", "NexaGenLabs", "nexagenlabs.com"], "url": U + "/",
        "logo": U + "/assets/img/logo-512.png", "description": SITE["tagline"],
        "founder": {"@id": U + "/about#person"}, "sameAs": [SITE["author_page"]]}
 PERSON = {"@type": "Person", "@id": U + "/about#person", "name": SITE["founder"], "url": U + "/about",
@@ -109,12 +110,17 @@ def page(path, title, desc, body, *, schema="", og_type="website", og_image=None
 <a class="brand" href="/" aria-label="NexagenLabs home">{LOGO}<span>Nexagen<b>Labs</b></span></a>
 <button class="menu-btn" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">{icon("menu")}</button>
 <ul class="nav-links" id="nav-links">{nav}</ul>
+<button class="search-btn" data-open-search aria-label="Search the site (Ctrl+K)">{icon("search")}<span>Search</span><kbd>Ctrl K</kbd></button>
 <a class="btn btn-primary btn-sm nav-cta" href="{BM}/" data-ev="open_benchmate" data-label="header">Open BenchMate {icon("arrow")}</a>
 </div></header>
 <main id="main">
 {body}
 </main>
 {footer()}
+<div class="s-overlay" id="search" hidden role="dialog" aria-modal="true" aria-label="Search NexagenLabs">
+<div class="s-box"><div class="s-head">{icon("search")}<input type="search" placeholder="Search tools, guides, books, buffers…" aria-label="Search" autocomplete="off"><button class="s-close" data-close-search aria-label="Close search">Esc</button></div>
+<div class="s-results" role="listbox"></div>
+<div class="s-foot"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span></div></div></div>
 <div class="consent" id="consent" role="dialog" aria-label="Cookie preferences">
 <p>We use Google Analytics cookies, only if you agree, to see which tools and guides help people most. No ads, no selling data. <a href="/privacy">Privacy</a></p>
 <div class="row"><button class="btn btn-primary btn-sm" data-consent="yes">Accept analytics</button><button class="btn btn-ghost btn-sm" data-consent="no">Decline</button></div>
@@ -133,13 +139,14 @@ def footer():
 <div class="foot-grid">
 <div><a class="brand" href="/">{LOGO}<span>Nexagen<b>Labs</b></span></a>
 <p class="muted" style="margin-top:14px;max-width:340px;font-size:.92rem">{e(SITE["tagline"])} Built and maintained by {e(SITE["founder"])}.</p>
-<form class="signup" name="bench-notes-footer" method="POST" data-netlify="true" netlify-honeypot="company" action="/thanks" data-ok="You're on the list. First Bench Note arrives soon.">
+<form class="signup" name="bench-notes-footer" method="POST" data-netlify="true" netlify-honeypot="company" action="/kit-download" data-reveal="footer-kit" data-ok="You're on the list. First Bench Note arrives soon.">
 <input type="hidden" name="form-name" value="bench-notes-footer"><p class="hp"><label>Company <input name="company"></label></p>
-<input type="email" name="email" required placeholder="you@lab.edu" aria-label="Email for Bench Notes"><button class="btn btn-primary btn-sm" type="submit">Get Bench Notes</button>
-<p class="fine form-status" role="status" style="width:100%"></p></form></div>
+<input type="email" name="email" required placeholder="you@lab.edu" aria-label="Email for Bench Notes"><button class="btn btn-primary btn-sm" type="submit">Get the kit</button>
+<p class="fine form-status" role="status" style="width:100%"></p><a id="footer-kit" class="kit-link" hidden href="{KIT}" download>Download the Bench Starter Kit (PDF)</a></form>
+<p class="fine">Sign up and get the free Bench Starter Kit (PDF).</p></div>
 <div><h4>Tools</h4><ul>{tools}<li><a href="/tools">All tools →</a></li></ul></div>
 <div><h4>Guides</h4><ul>{guides}<li><a href="/guides/">All guides →</a></li></ul></div>
-<div><h4>NexagenLabs</h4><ul><li><a href="/books/">Books</a></li><li><a href="/about">About the founder</a></li><li><a href="/contact">Contact</a></li><li><a href="/privacy">Privacy</a></li><li><a href="#" id="cookie-settings">Cookie settings</a></li></ul></div>
+<div><h4>NexagenLabs</h4><ul><li><a href="/books/">Books</a></li><li><a href="/starter-kit">Free starter kit</a></li><li><a href="/about">About the founder</a></li><li><a href="/contact">Contact</a></li><li><a href="/privacy">Privacy</a></li><li><a href="#" id="cookie-settings">Cookie settings</a></li></ul></div>
 </div>
 <div class="foot-base"><span>© <span id="year">{date.today().year}</span> NexagenLabs · {e(SITE["location"])}</span><span class="mono">Free tools. No login. No ads.</span></div>
 </div></footer>'''
@@ -197,15 +204,18 @@ def guide_card(g):
 </article>'''
 
 def newsletter(name="bench-notes"):
+    rid = name + "-kit"
     return f'''<section><div class="wrap"><div class="newsletter reveal">
-<div><span class="eyebrow">Bench Notes</span><h2>One useful bench tip a month.</h2>
-<p class="lead mb-0">A short email with a technique that people quietly get wrong, a new BenchMate tool, or a new book chapter. No spam. Unsubscribe in one click.</p></div>
-<form class="form" name="{name}" method="POST" data-netlify="true" netlify-honeypot="company" action="/thanks" data-ok="You're on the list. First Bench Note arrives soon.">
+<div><span class="eyebrow">Free Bench Starter Kit</span><h2>Six bench cheat sheets, free.</h2>
+<p class="lead">Molarity, C1V1, serial dilutions, buffer pKa table with a PBS recipe, percent to molarity, and nucleic acid conversions. Printable PDF.</p>
+<p class="muted mb-0">You also get Bench Notes: one useful bench tip a month. Unsubscribe in one click.</p></div>
+<form class="form" name="{name}" method="POST" data-netlify="true" netlify-honeypot="company" action="/kit-download" data-ok="Done. Your kit is ready below." data-reveal="{rid}">
 <input type="hidden" name="form-name" value="{name}"><p class="hp"><label>Company <input name="company"></label></p>
 <div><label for="{name}-email">Email</label><input id="{name}-email" type="email" name="email" required placeholder="you@lab.edu" autocomplete="email"></div>
 <div><label for="{name}-role">I am a…</label><select id="{name}-role" name="role"><option>BS / undergraduate student</option><option>MS student</option><option>PhD student</option><option>Postdoc / scientist</option><option>Lab manager / technician</option><option>Industry R&amp;D</option><option>Other</option></select></div>
-<button class="btn btn-primary" type="submit">Subscribe {icon("arrow")}</button>
+<button class="btn btn-primary" type="submit">Send me the kit {icon("arrow")}</button>
 <p class="fine form-status" role="status">We store your email only to send Bench Notes. See <a href="/privacy">privacy</a>.</p>
+<a class="btn btn-ghost kit-link" id="{rid}" hidden href="{KIT}" download data-ev="kit_download" data-label="{name}">Download the Bench Starter Kit (PDF)</a>
 </form></div></div></section>'''
 
 def faq_html(items):
@@ -213,6 +223,56 @@ def faq_html(items):
 
 def faq_ld(items):
     return {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in items]}
+
+
+UNIT_C = '<option>M</option><option selected>mM</option><option>µM</option><option>nM</option>'
+def _sel(name, opts, sel=None, label=""):
+    o = "".join(f'<option value="{v}"{" selected" if v == sel else ""}>{t}</option>' for v, t in opts)
+    return f'<select name="{name}" aria-label="{label or name}">{o}</select>'
+def _f(label, inner):
+    return f'<div class="field"><label>{label}</label><div class="ctl">{inner}</div></div>'
+def _inp(name, v, label):
+    return f'<input name="{name}" inputmode="decimal" value="{v}" aria-label="{label}">'
+CU = [("M","M"),("mM","mM"),("µM","µM"),("nM","nM")]
+VU = [("L","L"),("mL","mL"),("µL","µL")]
+def widget(kind):
+    if kind == "molarity":
+        presets = [("", "Pick a compound…"), ("58.44","NaCl (58.44)"), ("74.55","KCl (74.55)"), ("121.14","Tris base (121.14)"), ("372.24","Na₂EDTA·2H₂O (372.24)"), ("203.30","MgCl₂·6H₂O (203.30)"), ("147.01","CaCl₂·2H₂O (147.01)"), ("180.16","Glucose (180.16)"), ("238.30","HEPES (238.30)")]
+        title, fields = "Molarity to mass", (
+            _f("Compound", _sel("preset", presets, "", "Compound preset")) +
+            '<div class="calc-row">' + _f("Molarity", _inp("m", "1", "Molarity") + _sel("mu", CU, "M", "Molarity unit")) +
+            _f("Final volume", _inp("v", "500", "Volume") + _sel("vu", VU, "mL", "Volume unit")) + '</div>' +
+            _f("MW (g/mol, from your bottle)", _inp("mw", "58.44", "Molecular weight")))
+    elif kind == "c1v1":
+        title, fields = "C1V1 dilution", (
+            '<div class="calc-row">' + _f("Stock (C₁)", _inp("c1", "10", "C1") + _sel("c1u", CU, "mM", "C1 unit")) +
+            _f("Final (C₂)", _inp("c2", "25", "C2") + _sel("c2u", CU, "µM", "C2 unit")) + '</div>' +
+            _f("Final volume (V₂)", _inp("v2", "200", "V2") + _sel("v2u", VU, "µL", "V2 unit")))
+    elif kind == "serial":
+        title, fields = "Serial dilution table", (
+            '<div class="calc-row">' + _f("Start concentration", _inp("c0", "10", "Start") + _sel("cu", CU, "mM", "Unit")) +
+            _f("Dilution factor per step", _inp("f", "10", "Factor")) + '</div><div class="calc-row">' +
+            _f("Number of tubes", _inp("n", "6", "Tubes")) + _f("Transfer volume (µL)", _inp("t", "100", "Transfer volume")) + '</div>')
+    elif kind == "pbs":
+        title, fields = "PBS recipe scaler", (
+            '<div class="calc-row">' + _f("Final volume", _inp("v", "1", "Volume") + _sel("vu", VU, "L", "Volume unit")) +
+            _f("Strength (X)", _inp("x", "1", "Strength")) + '</div>' +
+            _f("Your Na₂HPO₄ form", _sel("hyd", [("141.96","Anhydrous (141.96)"), ("268.07","Heptahydrate (268.07)"), ("358.14","Dodecahydrate (358.14)")], "141.96", "Hydrate form")))
+    elif kind == "percent":
+        title, fields = "Percent solutions", (
+            _f("Type", _sel("type", [("wv","% w/v (solid in liquid)"), ("vv","% v/v (liquid in liquid)"), ("ww","% w/w to molarity")], "wv", "Percent type")) +
+            '<div class="calc-row">' + _f("Percent", _inp("p", "10", "Percent")) + _f("Final volume (mL)", _inp("v", "100", "Volume")) + '</div><div class="calc-row">' +
+            _f("MW (optional)", _inp("mw", "", "MW")) + _f("Density g/mL (w/w only)", _inp("d", "", "Density")) + '</div>')
+    else:  # dna
+        title, fields = "ng/µL to nM and copies", (
+            '<div class="calc-row">' + _f("Concentration (ng/µL)", _inp("c", "50", "Concentration")) + _f("Length (bp or nt)", _inp("len", "500", "Length")) + '</div>' +
+            _f("Molecule", _sel("type", [("650","dsDNA (650 g/mol per bp)"), ("330","ssDNA (330 g/mol per nt)"), ("340","RNA (340 g/mol per nt)")], "650", "Molecule type")))
+    return f"""<div class="widget panel" data-widget="{kind}">
+<div class="panel-bar"><i></i><i></i><i></i>&nbsp; Try it here · {title}<span class="live">● LIVE</span></div>
+<div class="panel-body">{fields}
+<div class="readout" aria-live="polite"><div class="k">Result</div><div class="v w-out">…</div><div class="s w-sub"></div></div></div></div>"""
+GUIDE_WIDGET = {"how-to-calculate-molarity": "molarity", "c1v1-c2v2-dilution-guide": "c1v1", "serial-dilution-guide": "serial",
+                "how-to-prepare-buffers": "pbs", "percent-solutions-w-v-v-v": "percent", "dna-concentration-ng-ul-to-nm": "dna"}
 
 # ------------------------------------------------------------------ pages
 def home():
@@ -298,7 +358,7 @@ def home():
 
 <section><div class="wrap" style="max-width:860px"><div class="section-head"><span class="eyebrow">FAQ</span><h2>Quick answers</h2></div>{faq_html(faq)}</div></section>
 '''
-    website = {"@type": "WebSite", "@id": U + "/#website", "url": U + "/", "name": "NexagenLabs", "publisher": {"@id": U + "/#org"}}
+    website = {"@type": "WebSite", "@id": U + "/#website", "url": U + "/", "name": "NexagenLabs", "alternateName": ["Nexagen Labs", "NexaGenLabs"], "publisher": {"@id": U + "/#org"}}
     page("/", "NexagenLabs: Free Lab Calculators, Research Tools & Guides for Scientists",
          "Free research tools for scientists: BenchMate lab calculators (molarity, dilution, buffers), AI-agent and docking companion code, evidence registers, guides and books by Suryaprakash Tripathy.",
          body, schema=ld(ORG, PERSON, website, faq_ld(faq)), priority="1.0")
@@ -424,10 +484,11 @@ def book_page(b):
 <p class="lead">{e(b["subtitle"])}</p>
 <p class="byline"><img class="avatar" src="/assets/img/suryaprakash-tripathy-96.webp" alt="Suryaprakash Tripathy" width="40" height="40"><span>by <a href="/about">Suryaprakash Tripathy</a> · {e(b["formats"])}</span></p>
 <div style="max-width:520px;margin-bottom:26px">{store_buttons(b, "book-page")}</div>
-<div class="hero-actions">{comp}<a class="btn btn-ghost" href="{SITE["author_page"]}" target="_blank" rel="noopener">More from the author {icon("ext")}</a></div>
+<div class="hero-actions">{comp}<a class="btn btn-ghost" href="#companion">Reader companion {icon("arrow")}</a><a class="btn btn-ghost" href="{SITE["author_page"]}" target="_blank" rel="noopener">More from the author {icon("ext")}</a></div>
 <div class="prose"><h2 style="margin-top:.6em">About this book</h2><p>{e(b["summary"])}</p>
 <h3>Who it's for</h3><ul class="checklist">{for_list}</ul></div>
 </div></div></div></section>
+{companion_section(b)}
 <section><div class="wrap"><div class="section-head"><span class="eyebrow">More books</span><h2>You may also like</h2></div><div class="books">{others}</div></div></section>
 {newsletter("bench-notes-book")}'''
     page(path, f'{b["title"]}: Book by Suryaprakash Tripathy',
@@ -454,8 +515,7 @@ def guide_page(g):
     article = {"@type": "TechArticle", "@id": U + path + "#article", "headline": g["title"], "description": g["description"],
                "author": {"@id": U + "/about#person"}, "publisher": {"@id": U + "/#org"}, "datePublished": g["date"], "dateModified": g["date"],
                "mainEntityOfPage": U + path, "keywords": g["keywords"], "image": U + "/assets/img/og-default.jpg", "proficiencyLevel": "Beginner"}
-    cta = f'''<div class="cta-box"><div><strong>Check your numbers with {e(tool_name)}</strong><p>Free, no login, runs in your browser.</p></div>
-<a class="btn btn-primary" href="{tool_url}" data-ev="open_benchmate" data-label="guide-{g["slug"]}">Open calculator {icon("arrow")}</a></div>'''
+    cta = widget(GUIDE_WIDGET.get(g["slug"], "c1v1")) + f'''<p class="fine" style="margin-top:-6px">Want more options, saved recipes and warnings? <a href="{tool_url}" data-ev="open_benchmate" data-label="guide-{g["slug"]}">Open the full {e(tool_name)} in BenchMate</a>.</p>'''
     # inject CTA after the 2nd h2
     parts = g["body"].split("<h2", 3)
     body_html = ("<h2".join(parts[:3]) + cta + "<h2" + parts[3]) if len(parts) == 4 else g["body"] + cta
@@ -555,6 +615,89 @@ def notfound():
 <div class="hero-actions" style="justify-content:center"><a class="btn btn-primary" href="/">Home</a><a class="btn btn-ghost" href="/tools">All tools</a><a class="btn btn-ghost" href="/books/">Books</a></div></div></section>'''
     page("/404.html", "Page not found | NexagenLabs", "The page you were looking for isn't here.", body, noindex=True)
 
+
+COMPANION = {
+    "the-working-laboratory": {"guides": ["how-to-calculate-molarity","c1v1-c2v2-dilution-guide","serial-dilution-guide","how-to-prepare-buffers","percent-solutions-w-v-v-v","dna-concentration-ng-ul-to-nm"],
+        "tools": [t for t in BENCHMATE_TOOLS[:5]] + [BENCHMATE_TOOLS[9]]},
+    "demystifying-biotechnology": {"guides": ["how-to-prepare-buffers","serial-dilution-guide","dna-concentration-ng-ul-to-nm"], "tools": [BENCHMATE_TOOLS[0], BENCHMATE_TOOLS[3], BENCHMATE_TOOLS[9]]},
+    "the-agentic-lab": {"guides": [], "tools": []},
+    "ai-for-biotech": {"guides": ["dna-concentration-ng-ul-to-nm"], "tools": []},
+}
+def companion_section(b):
+    c = COMPANION.get(b["slug"], {"guides": [], "tools": []})
+    cards = []
+    if b["companion"]:
+        label = "Companion code: tested builds for every chapter" if "lab." in b["companion"] else "Free companion calculators (BenchMate)"
+        cards.append(f'<a class="res" href="{b["companion"]}" data-ev="open_tool" data-label="companion-{b["slug"]}"><span class="s-k">Companion</span><b>{label}</b><span>{e(b["companion"].replace("https://","").rstrip("/"))}</span></a>')
+    for gs in c["guides"]:
+        g = next(x for x in GUIDES if x["slug"] == gs)
+        cards.append(f'<a class="res" href="/guides/{gs}"><span class="s-k">Guide</span><b>{e(g["short"])}</b><span>Worked examples with a live calculator</span></a>')
+    for n, pth, d, _ in c["tools"]:
+        cards.append(f'<a class="res" href="{BM}{pth}" data-ev="open_benchmate" data-label="companion-{b["slug"]}{pth}"><span class="s-k">Tool</span><b>{e(n)}</b><span>{e(d)}</span></a>')
+    res = f'<div class="res-grid">{"".join(cards)}</div>' if cards else '<p class="muted">Chapter resources for this title are being added. Use the form to ask for anything you need.</p>'
+    fname = "reader-" + b["slug"]
+    return f"""<section id="companion"><div class="wrap">
+<div class="section-head"><span class="eyebrow">Reader companion</span><h2>Resources for readers of {e(b["title"])}</h2>
+<p class="lead mb-0">Free material that goes with the book. If you spot an error or have a question about a chapter, send it below; corrections are listed here once confirmed.</p></div>
+{res}
+<div class="feature" style="margin-top:28px">
+<div><h3>Errata and reader questions</h3><p class="muted">Found a mistake, a broken QR code or a confusing passage? Tell me the chapter and page. Every report is read, and confirmed corrections go into the next printing.</p>
+<p class="fine mb-0">Confirmed errata: none listed yet.</p></div>
+<form class="form" name="{fname}" method="POST" data-netlify="true" netlify-honeypot="company" action="/thanks" data-ok="Thank you. Your note is in and I'll look at it soon.">
+<input type="hidden" name="form-name" value="{fname}"><input type="hidden" name="book" value="{e(b["title"])}"><p class="hp"><label>Company <input name="company"></label></p>
+<div class="calc-row" style="margin:0"><div><label for="{fname}-type">Type</label><select id="{fname}-type" name="type"><option>Erratum</option><option>Question</option><option>Broken QR code or link</option><option>Suggestion</option></select></div>
+<div><label for="{fname}-ch">Chapter / page</label><input id="{fname}-ch" name="where" placeholder="e.g. Ch 4, p 87"></div></div>
+<div><label for="{fname}-msg">Details</label><textarea id="{fname}-msg" name="message" required style="min-height:110px"></textarea></div>
+<div><label for="{fname}-em">Email (optional, for a reply)</label><input id="{fname}-em" type="email" name="email" autocomplete="email"></div>
+<button class="btn btn-primary" type="submit">Send {icon("arrow")}</button><p class="fine form-status" role="status"></p>
+</form></div></div></section>"""
+
+KIT_ITEMS = [("Molarity and mass", "mass = M × V × MW, hydrate MWs for common salts, purity correction."),
+             ("C1V1 dilutions", "Rearranged forms, unit-match table, when to do an intermediate dilution."),
+             ("Serial dilutions and CFU", "Dilution factor, 10-fold and 2-fold plate layouts, CFU/mL back-calculation."),
+             ("Buffers", "pKa table for common buffers, 1X PBS recipe with hydrate swaps, Tris temperature shift."),
+             ("Percent solutions", "w/v, v/v, w/w, percent to molarity, 70% ethanol, concentrated acid molarity."),
+             ("Nucleic acids", "A260 factors, purity ratios, ng/µL to nM and copies, ligation insert maths.")]
+def starter_kit():
+    items = "".join(f'<div class="cred reveal"><div class="n" style="font-size:1.15rem">{e(t)}</div><div class="l">{e(d)}</div></div>' for t, d in KIT_ITEMS)
+    body = f"""<section class="page-hero"><div class="wrap">{crumbs_html([("Home","/"),("Bench Starter Kit","/starter-kit")])}
+<div class="hero-grid" style="align-items:start"><div><span class="eyebrow">Free PDF · printable</span><h1>The Bench Starter Kit</h1>
+<p class="lead">Six one-page cheat sheets for the calculations you do every week. Print them, pin them above the bench, stop re-deriving C1V1 at 7 pm.</p>
+<p class="muted">Built from the NexagenLabs guides and checked against the same numbers BenchMate uses.</p></div>
+<div class="cred-grid two">{items}</div></div></div></section>
+{newsletter("starter-kit")}"""
+    page("/starter-kit", "Free Bench Starter Kit: Lab Calculation Cheat Sheets (PDF) | NexagenLabs",
+         "Free printable lab cheat sheets: molarity, C1V1, serial dilution and CFU, buffer pKa table and PBS recipe, percent solutions and DNA ng/µL to nM.",
+         body, schema=ld(ORG, crumbs_ld([("Home","/"),("Bench Starter Kit","/starter-kit")])), priority="0.7")
+
+def kit_download():
+    body = f"""<section class="page-hero"><div class="wrap center" style="max-width:640px"><span class="eyebrow">You're in</span><h1>Your Bench Starter Kit</h1>
+<p class="lead" style="margin-inline:auto">Thanks for signing up. Download the kit below. The first Bench Note arrives next month.</p>
+<div class="hero-actions" style="justify-content:center"><a class="btn btn-primary" href="{KIT}" download>Download PDF {icon("arrow")}</a><a class="btn btn-ghost" href="{BM}/">Open BenchMate</a></div></div></section>"""
+    page("/kit-download", "Your Bench Starter Kit | NexagenLabs", "Download the NexagenLabs Bench Starter Kit.", body, noindex=True)
+
+def search_index():
+    items = []
+    add = lambda **k: items.append(k)
+    for path, title, d, k, f in [("/", "Home", "NexagenLabs research tools hub", "Page", 0), ("/tools", "All tools", "Directory of every NexagenLabs tool", "Page", 1),
+                                 ("/benchmate", "BenchMate overview", "Free lab calculator suite", "Page", 1), ("/books/", "All books", "Books by Suryaprakash Tripathy", "Page", 1),
+                                 ("/guides/", "All guides", "Lab calculation guides", "Page", 1), ("/starter-kit", "Bench Starter Kit (free PDF)", "Printable lab cheat sheets", "Free", 1),
+                                 ("/about", "About Suryaprakash Tripathy", "Founder, credentials, research", "Page", 0), ("/contact", "Contact", "Questions, bugs, collaboration", "Page", 0)]:
+        add(t=title, u=path, d=d, k=k, f=f, w=1)
+    for n, pth, d, cat in BENCHMATE_TOOLS:
+        add(t=n, u=BM + pth, d=d, k="BenchMate", x="calculator tool " + cat, w=2, f=1 if pth in ("/molarity", "/buffer") else 0)
+    for p_ in PROPERTIES:
+        add(t=p_["name"], u=p_["url"], d=p_["desc"], k="Site", x=p_["kind"], w=1)
+    for g in GUIDES:
+        add(t=g["title"], u=f"/guides/{g['slug']}", d=g["description"], k="Guide", x=g["keywords"], w=2, f=0)
+        for i, t in g["toc"]:
+            add(t=t, u=f"/guides/{g['slug']}#{i}", d=g["short"], k="Section", x=g["keywords"], w=0)
+        for q, a in g["faq"]:
+            add(t=q, u=f"/guides/{g['slug']}#faq", d=a[:120], k="FAQ", x=g["keywords"], w=0)
+    for b in BOOKS:
+        add(t=b["title"], u=f"/books/{b['slug']}", d=b["subtitle"], k="Book", x=b["topic"] + " " + b["summary"][:200], w=2)
+    write("/search-index.json", json.dumps(items, ensure_ascii=False, separators=(",", ":")))
+
 # ------------------------------------------------------------------ SEO files
 def seo_files():
     urls = "".join(f'<url><loc>{U}{p}</loc><lastmod>{TODAY}</lastmod><priority>{pr}</priority></url>' for p, pr in PAGES)
@@ -577,7 +720,7 @@ def static():
         src = os.path.join(ROOT, d)
         dst = os.path.join(OUT, d)
         shutil.copytree(src, dst, dirs_exist_ok=True)
-    for f in ["favicon.ico", "favicon-32.png", "favicon-48.png", "apple-touch-icon.png", "_redirects", "_headers"]:
+    for f in [f for f in os.listdir(os.path.join(ROOT, "static")) if f.endswith(".txt")] + ["favicon.ico", "favicon-32.png", "favicon-48.png", "apple-touch-icon.png", "_redirects", "_headers"]:
         sp = os.path.join(ROOT, "static", f)
         if os.path.exists(sp):
             shutil.copy(sp, os.path.join(OUT, f))
@@ -590,6 +733,6 @@ if __name__ == "__main__":
     for b in BOOKS: book_page(b)
     guides_index()
     for g in GUIDES: guide_page(g)
-    about(); contact(); privacy(); thanks(); notfound()
+    about(); contact(); privacy(); thanks(); notfound(); starter_kit(); kit_download(); search_index()
     seo_files(); static()
     print(f"Built {len(PAGES)} indexable pages → {OUT}")
