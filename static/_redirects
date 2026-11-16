@@ -9,3 +9,7 @@
 /lab                  https://lab.nexagenlabs.com/         302
 /blog                 /guides/                             301
 /blog/*               /guides/:splat                       301
+# Short links for profiles and posts
+/free                 /books/                              302
+/free-guides          /books/                              302
+/verihelix/*          https://verihelix.nexagenlabs.com/:splat 301!
