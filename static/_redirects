@@ -4,7 +4,8 @@
 /glp1                 https://glp1.nexagenlabs.com/        301!
 /glp1/*               https://glp1.nexagenlabs.com/:splat  301!
 # BenchMate deep links typed on the main domain
-/benchmate/*          https://benchmate.nexagenlabs.com/:splat 301!
+# Not forced, so /benchmate serves the overview page and only unknown deep links redirect
+/benchmate/*          https://benchmate.nexagenlabs.com/:splat 301
 # Friendly shortcuts
 /lab                  https://lab.nexagenlabs.com/         302
 /blog                 /guides/                             301
@@ -12,4 +13,4 @@
 # Short links for profiles and posts
 /free                 /books/                              302
 /free-guides          /books/                              302
-/verihelix/*          https://verihelix.nexagenlabs.com/:splat 301!
+/verihelix/*          https://verihelix.nexagenlabs.com/:splat 301
