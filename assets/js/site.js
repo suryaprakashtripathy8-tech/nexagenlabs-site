@@ -22,6 +22,37 @@
     links.addEventListener("click", function (e) { if (e.target.closest("a")) closeMenu(); });
   }
 
+  /* ---------------- Interaction feedback ---------------- */
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine = window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  /* Soft ripple from the click point on buttons, chips and tabs. */
+  if (!calm) document.addEventListener("pointerdown", function (e) {
+    var b = e.target.closest && e.target.closest(".btn, .chip, .job, .console-tabs button, .icon-btn, .search-btn");
+    if (!b || b.disabled) return;
+    var r = b.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2.2, s = document.createElement("span");
+    s.className = "ripple"; s.style.width = s.style.height = d + "px";
+    s.style.left = (e.clientX - r.left - d / 2) + "px"; s.style.top = (e.clientY - r.top - d / 2) + "px";
+    b.appendChild(s); setTimeout(function () { s.remove(); }, 520);
+  });
+  /* A light that follows the mouse over the hero and over clickable cards. */
+  if (fine && !calm) {
+    $$(".row-card, .pick, .cert:not(.soon), .free, .site").forEach(function (el) { el.classList.add("lamp"); });
+    var pending = null, frame = 0;
+    var paint = function () {
+      frame = 0; if (!pending) return;
+      var el = pending.el, r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", (pending.x - r.left) + "px"); el.style.setProperty("--my", (pending.y - r.top) + "px");
+    };
+    document.addEventListener("pointermove", function (e) {
+      var el = e.target.closest && e.target.closest(".lamp, .hero"); if (!el) return;
+      pending = { el: el, x: e.clientX, y: e.clientY }; if (!frame) frame = requestAnimationFrame(paint);
+    }, { passive: true });
+    $$(".hero").forEach(function (h) {
+      h.addEventListener("pointerenter", function () { h.classList.add("lit"); });
+      h.addEventListener("pointerleave", function () { h.classList.remove("lit"); });
+    });
+  }
+
   /* ---------------- Calculators ---------------- */
   var CU = { M: 1, mM: 1e-3, "µM": 1e-6, nM: 1e-9 }, VU = { L: 1, mL: 1e-3, "µL": 1e-6 };
   function num(w, n) { var el = w.querySelector("[name=" + n + "]"); return el ? parseFloat(el.value) : NaN; }
