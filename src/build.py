@@ -49,9 +49,9 @@ def book_by(slug):
 
 # ------------------------------------------------------------------ JSON-LD helpers
 SAME_AS = [u for _, u in PROFILES]
-ORG = {"@type": "Organization", "@id": U + "/#org", "name": "NexagenLabs", "alternateName": ["Nexagen Labs", "NexaGenLabs", "nexagenlabs.com"], "url": U + "/",
+ORG = {"@type": "Organization", "@id": U + "/#org", "name": "NexagenLabs", "alternateName": ["Nexagen Labs", "NexaGenLabs", "Nexagenlabs", "nexagenlabs.com"], "url": U + "/",
        "logo": U + "/assets/img/logo-512.png", "description": SITE["tagline"],
-       "founder": {"@id": U + "/about#person"}, "sameAs": [SITE["author_page"], "https://github.com/nexagenlabs"]}
+       "founder": {"@id": U + "/about#person"}, "sameAs": [SITE["author_page"], "https://github.com/nexagenlabs", "https://benchmate.nexagenlabs.com/", "https://verihelix.nexagenlabs.com/", "https://www.linkedin.com/in/suryaprakash-tripathy-09b7751b6/"]}
 PERSON = {"@type": "Person", "@id": U + "/about#person", "name": AUTHOR, "url": U + "/about",
           "jobTitle": "Biotechnology researcher and author", "image": U + "/assets/img/suryaprakash-tripathy.jpg",
           "alumniOf": {"@type": "CollegeOrUniversity", "name": "Pondicherry University"},
@@ -117,6 +117,8 @@ def page(path, title, desc, body, *, schema="", og_type="website", og_image=None
 <meta name="color-scheme" content="dark light">
 {THEME_BOOT}
 <meta property="og:site_name" content="NexagenLabs">
+<meta name="application-name" content="NexagenLabs">
+<meta name="apple-mobile-web-app-title" content="NexagenLabs">
 <meta property="og:locale" content="en_US">
 <meta property="og:type" content="{og_type}">
 <meta property="og:title" content="{e(title)}">
@@ -397,7 +399,7 @@ def home():
 <section class="hero"><div class="wrap hero-grid">
 <div>
 <h1 class="rise">Bench-tested tools for the people who do the science.</h1>
-<p class="lead rise">Calculators, AI-checking tools, companion code and field-tested guides for wet-lab and computational biologists. Built by a working researcher, checked against real protocols, free to use.</p>
+<p class="lead rise">NexagenLabs makes free calculators, AI-checking tools, companion code and field-tested guides for wet-lab and computational biologists. Built by a working researcher, checked against real protocols, free to use.</p>
 <div class="actions rise">
 <a class="btn btn-primary" href="{BM}/" target="_blank" rel="noopener" data-ev="open_benchmate" data-label="hero">Open BenchMate {EXT}</a>
 <a class="btn btn-ghost" href="/tools">See all {n_tools} tools</a>
@@ -443,7 +445,7 @@ def home():
 
 {rail("Quick answers", "", faq_html(faq), cls="sec sec-alt")}
 '''
-    website = {"@type": "WebSite", "@id": U + "/#website", "url": U + "/", "name": "NexagenLabs", "alternateName": ["Nexagen Labs", "NexaGenLabs"], "publisher": {"@id": U + "/#org"}}
+    website = {"@type": "WebSite", "@id": U + "/#website", "url": U + "/", "name": "NexagenLabs", "alternateName": ["Nexagen Labs", "NexaGenLabs", "Nexagenlabs", "nexagenlabs.com"], "publisher": {"@id": U + "/#org"}, "inLanguage": "en"}
     page("/", "NexagenLabs: Free Lab Calculators, AI-Biotech Tools & Guides for Scientists",
          "Free research tools for scientists: BenchMate lab calculators (molarity, dilution, buffers), 16 VeriHelix AI-biotech tools, companion code, free lab guides and books by Suryaprakash Tripathy.",
          body, schema=ld(ORG, PERSON, website, faq_ld(faq)), priority="1.0")

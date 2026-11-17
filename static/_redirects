@@ -1,3 +1,6 @@
+# One address for search engines: send www to the bare domain
+https://www.nexagenlabs.com/*  https://nexagenlabs.com/:splat  301!
+
 # Old Google Sites paths
 /home                 /                                   301
 # GLP-1 book QR codes print nexagenlabs.com/glp1/...
