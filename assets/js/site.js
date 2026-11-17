@@ -207,7 +207,7 @@
   /* ---------------- Search and commands (Ctrl/Cmd+K or /) ---------------- */
   var dlg = document.getElementById("search"), sInput, sList, idx = window.NX_IDX || null, sel = 0, hits = [];
   var ACTIONS = [{ t: "Switch theme", d: "Toggle between dark and light", k: "Action", run: toggleTheme, x: "dark light mode theme", f: 1 }];
-  var ORDER = ["BenchMate", "VeriHelix", "Site", "Guide", "Free guide", "Book", "Page", "Action", "Section", "FAQ"];
+  var ORDER = ["BenchMate", "VeriHelix", "Site", "Guide", "Free guide", "Certificate", "Book", "Page", "Action", "Section", "FAQ"];
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
   function openSearch() {
     if (!dlg) return; dlg.hidden = false; document.body.style.overflow = "hidden";
