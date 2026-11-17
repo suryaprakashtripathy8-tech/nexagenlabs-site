@@ -13,4 +13,6 @@
 # Short links for profiles and posts
 /free                 /books/                              302
 /free-guides          /books/                              302
+/certificates         /certification                       301
+/certificate          /certification                       301
 /verihelix/*          https://verihelix.nexagenlabs.com/:splat 301

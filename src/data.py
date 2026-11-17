@@ -213,3 +213,20 @@ JOBS = [
     ("Check an ML study for leakage", [("Tool", "Data Leakage Audit", "Eight ways test data leaks into training", VH + "/tools/leakage-audit/"), ("Tool", "Clinical Metrics Calculator", "Metrics at your real prevalence", VH + "/tools/clinical-metrics/")]),
     ("Start in a new lab", [("Free guide", "A Lab RA's First 90 Days", "For new research assistants", GUM + "bench-ready"), ("Free guide", "Your First Semester in a Research Lab", "For undergraduates", GUM + "bench-ready-undergrad"), ("Free guide", "Your First Year in a Life-Science PhD", "For first-year PhD students", GUM + "bench-ready-phd")]),
 ]
+
+# Free certificates on the tool sites, gathered on /certification.
+# (name, how to earn it, target, kind, link). kind: "quiz" or "habit".
+BM_CERTS = [
+    ("Bench Fundamentals", "Answer 50 foundation-level questions correctly, across every category of the Technique Quiz.", "50 correct answers", "quiz", BM + "/quiz"),
+    ("Buffer Preparation", "Answer 30 buffer-chemistry questions correctly in the Technique Quiz.", "30 correct answers", "quiz", BM + "/quiz"),
+    ("Dilution Mastery", "Answer 20 dilution questions correctly in the Technique Quiz.", "20 correct answers", "quiz", BM + "/quiz"),
+    ("Daily Practice", "Read Today's Technique on BenchMate on 30 days in a row.", "30-day streak", "habit", BM + "/"),
+    ("BenchMate Explorer", "Use three different BenchMate features, such as the calculators, MW lookup and buffer generator.", "3 features used", "habit", BM + "/"),
+]
+VH_CERTS = [
+    ("AI Foundations for Biotechnologists", "Prompt engineering, hallucination checks, AI literature review, AI writing ethics, scientific figures, lab data and reproducibility.", "Chapters 1 to 8", VH + "/certificates/take/?track=foundations"),
+    ("AI for Protein Science and Drug Discovery", "Structure prediction, pLDDT and PAE, complex prediction, de novo protein design, docking, ADMET and drug-likeness.", "Chapters 9 to 11", VH + "/certificates/take/?track=protein-drug"),
+    ("AI for Omics, Sequencing and Genome Editing", "Single-cell QC and annotation, spatial transcriptomics, NGS quality metrics, variant interpretation, CRISPR and prime editing.", "Chapters 12 to 14", VH + "/certificates/take/?track=omics-editing"),
+    ("Responsible AI in Biotech Research", "Clinical evaluation metrics, prevalence and PPV, data leakage, reporting standards, bias and fairness, regulatory pathways.", "Chapters 16 and 19", VH + "/certificates/take/?track=responsible-ai"),
+]
+JOBS.append(("Earn a free certificate", [("Certificate", "Bench Fundamentals", "50 correct answers in the Technique Quiz", BM + "/quiz"), ("Certificate", "AI Foundations for Biotechnologists", "VeriHelix track 1", VH + "/certificates/take/?track=foundations"), ("Page", "All free certificates", "Nine certificates and a capstone", "/certification")]))
