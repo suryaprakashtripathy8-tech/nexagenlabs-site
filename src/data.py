@@ -221,7 +221,7 @@ BM_CERTS = [
     ("Buffer Preparation", "Answer 30 buffer-chemistry questions correctly in the Technique Quiz.", "30 correct answers", "quiz", BM + "/quiz"),
     ("Dilution Mastery", "Answer 20 dilution questions correctly in the Technique Quiz.", "20 correct answers", "quiz", BM + "/quiz"),
     ("Daily Practice", "Read Today's Technique on BenchMate on 30 days in a row.", "30-day streak", "habit", BM + "/"),
-    ("BenchMate Explorer", "Use three different BenchMate features, such as the calculators, MW lookup and buffer generator.", "3 features used", "habit", BM + "/"),
+    ("BenchMate Explorer", "Use three different BenchMate tools.", "3 features used", "habit", BM + "/"),
 ]
 VH_CERTS = [
     ("AI Foundations for Biotechnologists", "Prompt engineering, hallucination checks, AI literature review, AI writing ethics, scientific figures, lab data and reproducibility.", "Chapters 1 to 8", VH + "/certificates/take/?track=foundations"),
@@ -229,4 +229,4 @@ VH_CERTS = [
     ("AI for Omics, Sequencing and Genome Editing", "Single-cell QC and annotation, spatial transcriptomics, NGS quality metrics, variant interpretation, CRISPR and prime editing.", "Chapters 12 to 14", VH + "/certificates/take/?track=omics-editing"),
     ("Responsible AI in Biotech Research", "Clinical evaluation metrics, prevalence and PPV, data leakage, reporting standards, bias and fairness, regulatory pathways.", "Chapters 16 and 19", VH + "/certificates/take/?track=responsible-ai"),
 ]
-JOBS.append(("Earn a free certificate", [("Certificate", "Bench Fundamentals", "50 correct answers in the Technique Quiz", BM + "/quiz"), ("Certificate", "AI Foundations for Biotechnologists", "VeriHelix track 1", VH + "/certificates/take/?track=foundations"), ("Page", "All free certificates", "Nine certificates and a capstone", "/certification")]))
+JOBS.append(("Earn a free certificate", [("Certificate", "Bench Fundamentals", "50 correct answers in the Technique Quiz", BM + "/quiz"), ("Certificate", "AI Foundations for Biotechnologists", "VeriHelix track 1", VH + "/certificates/take/?track=foundations"), ("Page", "All free certificates", "Seven certificates and a capstone", "/certification")]))
