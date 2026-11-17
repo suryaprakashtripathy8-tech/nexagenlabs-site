@@ -386,7 +386,7 @@ def home():
     books = "".join(book_card(b, "home") for b in BOOKS)
     creds = "".join(f'<li><span class="n">{n}<small>{u}</small></span><span class="l">{e(l)}</span></li>' for n, u, l in CREDENTIALS[:4])
     faq = [
-        ("Is everything on NexagenLabs free?", "Yes. BenchMate, VeriHelix, every companion site and all nine certificates are free to use with no login. The books are sold on Amazon; the tools work without them."),
+        ("Is everything on NexagenLabs free?", "Yes. BenchMate, VeriHelix, every companion site and every certificate are free to use with no login. The books are sold on Amazon; the tools work without them."),
         ("Are the free guides really free?", "Yes. Each Bench Ready guide is listed at $0 on our store at books.nexagenlabs.com. Enter 0 as the price and you get the book, the Excel workbook, the printable kit and the message templates."),
         ("Does BenchMate store my data?", "No. Calculations run in your browser. The Reagent Log saves recipes only in your own browser storage, never on a server."),
         ("Who builds these tools?", "Suryaprakash Tripathy, a biotechnology researcher with an M.Sc. from Pondicherry University, national fellowships (ICMR-JRF, DBT-GATB, GATE BT), and research work at IISER Bhopal, IIT Guwahati and ICMR institutes."),
@@ -563,24 +563,27 @@ def verihelix():
          "VeriHelix is a free, no-login AI-biotech workbench: verify AI-written references, read AlphaFold confidence, screen molecules, look up variants and audit ML studies for data leakage.",
          body, schema=ld(ORG, app, crumbs_ld([("Home","/"),("VeriHelix","/verihelix")]), faq_ld(faq)), active="/verihelix", priority="0.9")
 
-def cert_card(name, how, target, url, site, tone, step=None):
-    return f'''<article class="cert" data-tone="{tone}">
+def cert_card(name, how, target, url, site, tone, soon=False):
+    action = ('<span class="tag">Coming soon</span>' if soon else
+              f'<a class="btn btn-ghost btn-sm" href="{url}" target="_blank" rel="noopener" data-ev="cert_start" data-label="{e(name)}">Start {EXT}</a>')
+    return f'''<article class="cert{" soon" if soon else ""}" data-tone="{tone}">
 <div class="cert-top">{icon("seal", "cert-seal")}<span class="cert-site">{site}</span></div>
 <h3>{e(name)}</h3>
 <p>{e(how)}</p>
 <p class="cert-target">{e(target)}</p>
-<a class="btn btn-ghost btn-sm" href="{url}" target="_blank" rel="noopener" data-ev="cert_start" data-label="{e(name)}">Start {EXT}</a>
+{action}
 </article>'''
 
 def certification():
     quiz = [c for c in BM_CERTS if c[3] == "quiz"]
     habit = [c for c in BM_CERTS if c[3] == "habit"]
     bm_quiz = "".join(cert_card(n, h, t, u, "BenchMate quiz", "teal") for n, h, t, _, u in quiz)
-    bm_habit = "".join(cert_card(n, h, t, u, "BenchMate habit", "teal") for n, h, t, _, u in habit)
+    bm_habit = "".join(cert_card(n, h, t, u, "BenchMate habit", "teal", soon=True) for n, h, t, _, u in habit)
     vh = "".join(cert_card(n, h, t, u, f"VeriHelix track {i+1}", "blue") for i, (n, h, t, u) in enumerate(VH_CERTS))
-    total = len(BM_CERTS) + len(VH_CERTS)
+    total = len(quiz) + len(VH_CERTS)
     faq = [
         ("Are the certificates really free?", "Yes. Every certificate on BenchMate and VeriHelix is free. There is no fee, no account and no login."),
+        ("Why do I need to add my name on BenchMate?", "BenchMate issues certificates in the name you set on its quiz dashboard. If you qualify before adding a name, the certificate is issued as soon as you add it and answer your next question."),
         ("Do I need to create an account?", "No. Your progress is saved in your own browser on the device you use. Download your certificate, or keep its verification link, as your permanent copy."),
         ("How does someone check my VeriHelix certificate is genuine?", "Every VeriHelix certificate has a verification link and ID. Anyone can check it on the Verify a certificate page at verihelix.nexagenlabs.com/verify."),
         ("Can I add a certificate to LinkedIn?", "Yes. VeriHelix certificates are designed to be added to LinkedIn with their verification link. BenchMate certificates can be downloaded and shared."),
@@ -596,7 +599,7 @@ def certification():
     body = f'''<section class="hero"><div class="wrap">
 {crumbs_html([("Home","/"),("Free Certification","/certification")])}
 <h1 class="rise" style="max-width:16ch">Free certificates for bench and AI skills.</h1>
-<p class="lead rise">Answer quiz questions, keep a daily habit, or pass an AI-for-biotech track. Every certificate is free, needs no account, and can be downloaded and shared.</p>
+<p class="lead rise">Answer bench-skills quiz questions or pass an AI-for-biotech track. Every certificate is free, needs no account, and can be downloaded and shared.</p>
 <div class="actions rise"><a class="btn btn-primary" href="{BM}/quiz" target="_blank" rel="noopener" data-ev="cert_start" data-label="hero-bm">Start the BenchMate quiz {EXT}</a><a class="btn btn-ghost" href="{VH}/certificates/" target="_blank" rel="noopener" data-ev="cert_start" data-label="hero-vh">VeriHelix tracks {EXT}</a></div>
 <ul class="facts rise"><li><b>{total}</b>certificates</li><li><b>1</b>capstone</li><li><b>0</b>fees</li><li><b>0</b>logins</li></ul>
 </div></section>
@@ -604,8 +607,8 @@ def certification():
 <section class="sec-tight"><div class="wrap">
 <ol class="cert-steps">
 <li><b>Pick a certificate</b><span>Bench skills on BenchMate, AI skills on VeriHelix.</span></li>
-<li><b>Answer the questions</b><span>Your progress saves in your browser as you go.</span></li>
-<li><b>Add your name and download</b><span>Your certificate is yours to keep and share.</span></li>
+<li><b>Add your name</b><span>Certificates are issued in the name you enter. Progress saves in your browser.</span></li>
+<li><b>Answer the questions</b><span>Reach the target and your certificate is ready to download.</span></li>
 <li><b>Share the proof</b><span>VeriHelix certificates carry a link anyone can verify.</span></li>
 </ol></div></section>
 
@@ -614,7 +617,7 @@ def certification():
 <p class="lead">Built on <a href="/books/the-working-laboratory">{e(wl["title"])}</a>. Questions come from 100+ items across 8 categories of bench practice, at three difficulty levels.</p></div>
 <a class="btn btn-ghost" href="{BM}/quiz/dashboard" target="_blank" rel="noopener" data-ev="cert_start" data-label="bm-dashboard">Your progress {EXT}</a></div>
 <h3 class="dir-h">Earned through the Technique Quiz</h3><div class="cert-grid">{bm_quiz}</div>
-<h3 class="dir-h">Earned through regular use</h3><div class="cert-grid">{bm_habit}</div>
+<h3 class="dir-h">Earned through regular use <small>coming soon on BenchMate</small></h3><div class="cert-grid">{bm_habit}</div>
 </div></section>
 
 <section class="sec sec-alt" id="ai"><div class="wrap">
@@ -630,7 +633,7 @@ def certification():
 {rail("Certificate questions", "", faq_html(faq))}
 {newsletter("bench-notes-certification")}'''
     page("/certification", "Free Biotech & Lab Skills Certificates: Bench and AI-for-Biotech Quizzes | NexagenLabs",
-         "Earn free certificates in bench skills and AI for biotech: BenchMate Technique Quiz certificates (Bench Fundamentals, Buffer Preparation, Dilution Mastery) and four verifiable VeriHelix tracks. No login.",
+         "Earn free certificates in bench skills and AI for biotech: three BenchMate Technique Quiz certificates (Bench Fundamentals, Buffer Preparation, Dilution Mastery) and four verifiable VeriHelix tracks. No login.",
          body, schema=ld(ORG, items, crumbs_ld([("Home","/"),("Free Certification","/certification")]), faq_ld(faq)), active="/certification", priority="0.85")
 
 def books_index():
@@ -895,8 +898,8 @@ def search_items():
         add(t=n, u=VH + pth, d=d, k="VeriHelix", x="ai tool " + dict(VERIHELIX_GROUPS)[_], w=2, f=1 if "citation" in pth else 0)
     for p_ in PROPERTIES:
         add(t=p_["name"], u=p_["url"], d=p_["desc"], k="Site", x=p_["kind"], w=1)
-    for n, h, t, _, u in BM_CERTS:
-        add(t=n + " certificate", u=u, d=h, k="Certificate", x="certificate certification quiz free benchmate " + t, w=1)
+    for n, h, t, kind, u in BM_CERTS:
+        add(t=n + " certificate" + (" (coming soon)" if kind == "habit" else ""), u=u, d=h, k="Certificate", x="certificate certification quiz free benchmate " + t, w=1)
     for n, h, t, u in VH_CERTS:
         add(t=n + " certificate", u=u, d=h, k="Certificate", x="certificate certification quiz free verihelix track " + t, w=1)
     for fb in FREE_BOOKS:
